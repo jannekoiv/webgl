@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+<head>
+    <title>TODO supply a title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+<canvas id="myCanvas" width="1280" height="960"
+        style="border:1px solid #000000; margin-left: auto; margin-right: auto; display: block; width: 1280px;"></canvas>
+<script type="text/javascript" src="gl-matrix-min.js"></script>
+
+<script id="vertexShader" type="vertexShader">
+    attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    varying vec3 v_normal;
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        v_normal = mat3(uMVMatrix) * aVertexNormal;
+    }
+</script>
+
+<script id="fragmentShader" type="fragmentShader">
+    precision mediump float;
+    varying vec3 v_normal;
+    void main(void) {
+        vec3 normal = normalize(v_normal);
+        vec3 lightDirection = vec3(1.0, 0.0, 0.75);
+        float angle = dot(normal, normalize(lightDirection));
+
+        gl_FragColor = vec4(0.0, 1.0, 1.0, 1.0);
+        gl_FragColor.rgb *= angle;
+    }
+</script>
+
+<script src="main.js"></script>
+<script type="text/javascript">
+    Main.init();
+    Main.run();
+</script>
+</body>
+</html>
